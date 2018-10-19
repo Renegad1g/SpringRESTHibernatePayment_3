@@ -40,16 +40,23 @@ public class AuthController {
 	}
 	
 	@PostMapping("/signin")
-	public AbstractResponse<Object> signin(@RequestBody UserRequest _userRequest) {
-		AbstractResponse response =
-				service.getAccountInfo(_userRequest);
-		if (response instanceof AccountInfoResponse) {
+	public AccountInfoResponse signin(@RequestBody UserRequest _userRequest) {
+		AccountInfoResponse response =
+				service.getAccountInfoResponse(_userRequest);
+		if (response.getAccountInfo() != null) {
 			httpSession.setAttribute(
 					"ACCOUNT_INFO"
 					, ((AccountInfoResponse)response).getAccountInfo()
 				);
 		}
 		return response;
+	}
+	
+	@PostMapping("/signout")
+	public AbstractResponse<Object> signout() {
+		
+		httpSession.removeAttribute("ACCOUNT_INFO");
+		return service.signOut();
 	}
 	
 	@PostMapping("/check")

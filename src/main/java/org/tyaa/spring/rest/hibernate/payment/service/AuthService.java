@@ -60,28 +60,37 @@ public class AuthService {
 		return response;
 	}
 	
-	public AbstractResponse getAccountInfo(UserRequest _userRequest) {
+	public AccountInfoResponse getAccountInfoResponse(UserRequest _userRequest) {
 		
-		AbstractResponse response =
-				new AbstractResponse<Object>() {};
+		AccountInfoResponse response = new AccountInfoResponse();
 		User user =
 			userDao.getUserByName(_userRequest.getName());
-		if(user == null) {
+		if(user == null || !user.getPassword().equals(_userRequest.getPassword())) {
 			
 			response.setStatus("error");
 			response.setMessage(
-				String.format("User %s not found", _userRequest.getName())
+				String.format("User %s not found or password is incorrect", _userRequest.getName())
 			);
 		} else {
 			
-			AccountInfoResponse successResponse = new AccountInfoResponse();
-			successResponse.setStatus("success");
-			successResponse.setMessage(
+			response.setStatus("success");
+			response.setMessage(
 				String.format("User %s found", _userRequest.getName())
 			);
-			successResponse.setAccountInfo(new AccountInfo(user.getName()));
+			response.setAccountInfo(
+					new AccountInfo(user.getName(), user.getRole().getId())
+				);
 		}
 		
+		return response;
+	}
+	
+	public AbstractResponse<Object> signOut() {
+		
+		AbstractResponse<Object> response =
+				new AbstractResponse<Object>() {};
+		response.setStatus("success");
+		response.setMessage("signout");
 		return response;
 	}
 }
