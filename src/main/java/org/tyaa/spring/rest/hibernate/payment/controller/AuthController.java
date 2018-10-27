@@ -23,9 +23,11 @@ import org.tyaa.spring.rest.hibernate.payment.service.CategoryService;
 @RequestMapping("/auth")
 public class AuthController {
 
+        //Получение веб-сессии
 	@Autowired
-    private HttpSession httpSession;
+        private HttpSession httpSession;
 	
+        //Получение ссылки на собственную службу (безопасности)
 	@Autowired
 	private AuthService service;
 
